@@ -2,6 +2,7 @@ package com.practice.specificationPattern.domain.posting.service;
 
 import com.practice.specificationPattern.domain.posting.Posting;
 import com.practice.specificationPattern.domain.posting.dto.req.PostingReqDto;
+import com.practice.specificationPattern.domain.posting.dto.req.PostingUpdateReqDto;
 import com.practice.specificationPattern.domain.posting.dto.res.PostingListResDto;
 import com.practice.specificationPattern.domain.posting.dto.res.PostingResDto;
 import com.practice.specificationPattern.domain.posting.repository.PostingRepository;
@@ -61,5 +62,25 @@ public class PostingService {
         List<PostingResDto> list = all.stream().filter(it -> specification.isSatisfiedBy(it)).map(PostingResDto::new).collect(Collectors.toList());
         PostingListResDto result = new PostingListResDto(list);
         return result;
+    }
+
+    @Transactional
+    public void updatePosting(Long postingId, PostingUpdateReqDto postingUpdateReqDto, String member){
+        Posting posting = postingRepository.findById(postingId)
+                .orElseThrow(() -> new RuntimeException());
+        Specification specification = new PostingMemberSpecification(member);
+        if(!specification.isSatisfiedBy(posting))
+            throw new RuntimeException();
+        posting.update(postingUpdateReqDto);
+    }
+
+    @Transactional
+    public void deletePosting(Long postingId, String member){
+        Posting posting = postingRepository.findById(postingId)
+                .orElseThrow(() -> new RuntimeException());
+        Specification specification = new PostingMemberSpecification(member);
+        if(!specification.isSatisfiedBy(posting))
+            throw new RuntimeException();
+        postingRepository.delete(posting);
     }
 }
