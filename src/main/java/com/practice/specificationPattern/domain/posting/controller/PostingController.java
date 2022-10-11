@@ -39,13 +39,13 @@ public class PostingController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> updatePosting(@PathVariable Long id, @RequestBody PostingUpdateReqDto updateReqDto, @RequestHeader String member){
         postingService.updatePosting(id, updateReqDto, member);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePosting(@PathVariable Long id, @RequestHeader String member){
         postingService.deletePosting(id, member);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 }
